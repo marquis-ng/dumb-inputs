@@ -1,0 +1,43 @@
+<title>Name Slider</title>
+
+<p>Length of name: <span id="length_label"></span></p>
+<input type="range" min="1" max="15" value="5" id="length_input">
+<p>Name: <span id="name_label"></span></p>
+<input type="range" min="0" value="0" id="name_input">
+<button id="hello" style="display: block;">Say hello!!!</button>
+
+<script>
+    const length_input = document.getElementById("length_input");
+    const length_label = document.getElementById("length_label");
+    const name_input = document.getElementById("name_input");
+    const name_label = document.getElementById("name_label");
+    const hello = document.getElementById("hello");
+
+    function change_max() {
+        length_label.innerText = length_input.value;
+        name_input.max = 26 ** length_input.value - 1;
+        update_str();
+    }
+
+    function update_str() {
+        name_label.innerText = num2str(name_input.value, length_input.value);
+    }
+
+    function num2str(n, z) {
+        let str = "";
+        while (z > 0) {
+            str = String.fromCharCode(65 + (n % 26)) + str;
+            n = Math.floor(n / 26);
+            z--;
+        }
+
+        return str;
+    }
+
+    length_input.addEventListener("input", () => change_max());
+    name_input.addEventListener("input", () => update_str());
+    change_max();
+
+
+    hello.addEventListener("click", () => alert(`Hello, ${name_label.innerText}`));
+</script>
