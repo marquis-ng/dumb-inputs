@@ -1,0 +1,62 @@
+<title>Radio Dialer</title>
+
+<p>Phone number: <span id="phone_number_label"></span></p>
+<div id="dialer_radio_div"></div>
+<button id="add_digit">Add digit</button>
+<button id="remove_digit">Remove digit</button>
+<button id="dial">Dial</button>
+
+<script>
+    const phone_number_label = document.getElementById("phone_number_label");
+    const dialer_radio_div = document.getElementById("dialer_radio_div");
+    const add_digit = document.getElementById("add_digit");
+    const remove_digit = document.getElementById("remove_digit");
+    const dial = document.getElementById("dial");
+
+    let digit_count = 0;
+
+    function update_dialer() {
+        let phone_number = "";
+
+        for (let digit_pos = 0; digit_pos < digit_count; digit_pos++) {
+            const selected_digit = document.querySelector(`input[type="radio"][name="radio_${digit_pos}"]:checked`);
+            if (selected_digit) {
+                phone_number += selected_digit.value;
+            } else {
+                phone_number += "0";
+            }
+        }
+
+        phone_number_label.innerText = phone_number;
+    }
+
+    add_digit.addEventListener("click", () => {
+        const dialer_radio_inputs = document.createElement("div");
+
+        for (let digit = 0; digit <= 9; digit++) {
+            const dialer_radio_input = document.createElement("input");
+            dialer_radio_input.type = "radio";
+            dialer_radio_input.name = `radio_${digit_count}`;
+            dialer_radio_input.value = digit;
+            dialer_radio_inputs.appendChild(dialer_radio_input);
+
+            dialer_radio_inputs.addEventListener("change", () => update_dialer());
+        }
+
+        dialer_radio_div.appendChild(dialer_radio_inputs);
+        digit_count++;
+
+        update_dialer();
+    });
+
+    remove_digit.addEventListener("click", () => {
+        if (dialer_radio_div.lastChild) {
+            dialer_radio_div.lastChild.remove();
+            digit_count--;
+        }
+
+        update_dialer();
+    });
+
+    dial.addEventListener("click", () => window.location.href = `tel:${phone_number_label.innerText}`);
+</script>
